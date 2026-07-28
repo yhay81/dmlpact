@@ -1,0 +1,123 @@
+{
+  "schema_version": "dmlpact.artifact-corpus/v1",
+  "license": "MIT",
+  "accepted": [
+    {
+      "kind": "plan",
+      "path": "delete.plan.json",
+      "sha256": "a9c4d86d05d53fb470e054ed176086b8468ed018b70a84691175cc36e5b99a86"
+    },
+    {
+      "kind": "receipt",
+      "path": "delete.receipt.ndjson",
+      "sha256": "c2ee9446aa2daa67c083c5774906d84b241deb0674d875697bd71d0532a35f0c"
+    }
+  ],
+  "rejections": [
+    {
+      "id": "plan_unknown_field",
+      "target": "plan",
+      "operation": "add",
+      "pointer": "/unexpected",
+      "value": true,
+      "expected_code": "plan_json_invalid"
+    },
+    {
+      "id": "plan_unknown_nested_field",
+      "target": "plan",
+      "operation": "add",
+      "pointer": "/preconditions/database/unexpected",
+      "value": true,
+      "expected_code": "plan_json_invalid"
+    },
+    {
+      "id": "plan_unsupported_schema",
+      "target": "plan",
+      "operation": "replace",
+      "pointer": "/schema_version",
+      "value": "dmlpact.plan.v99",
+      "expected_code": "plan_version_unsupported"
+    },
+    {
+      "id": "plan_unsupported_tool",
+      "target": "plan",
+      "operation": "replace",
+      "pointer": "/tool_version",
+      "value": "99.0.0",
+      "expected_code": "plan_version_unsupported"
+    },
+    {
+      "id": "plan_limit_tamper",
+      "target": "plan",
+      "operation": "replace",
+      "pointer": "/limits/max_rows",
+      "value": 2,
+      "expected_code": "plan_hash_mismatch"
+    },
+    {
+      "id": "plan_hash_missing",
+      "target": "plan",
+      "operation": "replace",
+      "pointer": "/plan_sha256",
+      "value": null,
+      "expected_code": "plan_hash_missing"
+    },
+    {
+      "id": "receipt_unknown_field",
+      "target": "receipt",
+      "event_index": 0,
+      "operation": "add",
+      "pointer": "/unexpected",
+      "value": true,
+      "expected_code": "receipt_event_invalid"
+    },
+    {
+      "id": "receipt_unsupported_schema",
+      "target": "receipt",
+      "event_index": 0,
+      "operation": "replace",
+      "pointer": "/schema_version",
+      "value": "dmlpact.receipt-event.v99",
+      "expected_code": "receipt_version_unsupported"
+    },
+    {
+      "id": "receipt_event_hash_tamper",
+      "target": "receipt",
+      "event_index": 0,
+      "operation": "replace",
+      "pointer": "/event_sha256",
+      "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "expected_code": "receipt_event_hash_mismatch"
+    },
+    {
+      "id": "receipt_previous_link_rebound",
+      "target": "receipt",
+      "event_index": 1,
+      "operation": "replace",
+      "pointer": "/previous_event_sha256",
+      "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "rebind_event": true,
+      "expected_code": "receipt_chain_invalid"
+    },
+    {
+      "id": "receipt_timestamp_rebound",
+      "target": "receipt",
+      "event_index": 1,
+      "operation": "replace",
+      "pointer": "/timestamp_unix_ms",
+      "value": 999,
+      "rebind_event": true,
+      "expected_code": "receipt_chain_invalid"
+    },
+    {
+      "id": "receipt_identity_rebound",
+      "target": "receipt",
+      "event_index": 1,
+      "operation": "replace",
+      "pointer": "/receipt_id",
+      "value": "8888888888888888888888888888888888888888888888888888888888888888",
+      "rebind_event": true,
+      "expected_code": "receipt_chain_invalid"
+    }
+  ]
+}

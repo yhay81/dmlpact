@@ -6,6 +6,11 @@ behavior while preserving documented contracts where practical.
 
 ## [Unreleased]
 
+### Added
+
+- Added a digest-pinned v0.1 plan and two-event receipt corpus with exact
+  round trips and twelve declared artifact mutations.
+
 ### Changed
 
 - Defined measurable v1.0 compatibility, SQL classification, mutation

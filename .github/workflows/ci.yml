@@ -26,6 +26,22 @@ jobs:
         run: cargo clippy --all-targets --locked -- -D warnings
       - name: Package manifest
         run: cargo package --locked --allow-dirty
+      - name: Artifact contract fixtures
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          root = Path("tests/fixtures/contracts")
+          for fixture in sorted(root.rglob("*.json")):
+              with fixture.open(encoding="utf-8") as handle:
+                  json.load(handle)
+          for fixture in sorted(root.rglob("*.ndjson")):
+              with fixture.open(encoding="utf-8") as handle:
+                  records = [json.loads(line) for line in handle if line.strip()]
+              if not records:
+                  raise SystemExit(f"{fixture} has no events")
+          PY
       - name: Machine contracts and completions
         shell: bash
         run: |

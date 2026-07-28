@@ -161,6 +161,11 @@ Exit classes are: `0` success or fully receipted safety refusal, `1` I/O or
 database transport, `2` usage, `3` policy, `4` budget, and `5` invalid contract
 or uncertain commit.
 
+The checked-in
+[artifact compatibility corpus](tests/fixtures/contracts/README.md) freezes a
+sealed v0.1 plan and complete hash-linked receipt. CI checks exact bytes,
+offline acceptance, and declared fail-closed mutations on every supported OS.
+
 ## Security and limitations
 
 Read [the safety model](docs/safety-model.md) and [SECURITY.md](SECURITY.md)

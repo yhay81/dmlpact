@@ -27,6 +27,10 @@ Schema identifiers use `dmlpact.<document>.v1`. Additive fields within a schema
 version are avoided in sealed plan and receipt input documents because unknown
 fields are denied. A breaking contract requires a new schema identifier.
 
+The versioned fixtures and self-consistent adversarial mutations in
+[`tests/fixtures/contracts/`](../tests/fixtures/contracts/README.md) pin plan
+seals and receipt-chain behavior without contacting PostgreSQL.
+
 ## Exit classes
 
 | Code | Class | Meaning |

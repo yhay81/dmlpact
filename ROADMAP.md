@@ -20,6 +20,12 @@
 - [ ] Evaluate parameter binding without weakening exact proposal identity.
 - [ ] Expand PostgreSQL version and proxy compatibility fixtures.
 
+Current compatibility evidence: the checked-in v0.1 corpus pins a sealed plan
+and complete two-event receipt byte-for-byte. Twelve declared mutations cover
+unknown fields, schema/tool versions, plan hashes, event hashes, receipt
+identity, timestamps, and previous-event linkage. A second released minor
+version and migration or no-migration evidence are still required.
+
 ## v1.0 quality criteria
 
 DMLPact reaches v1.0 only when every gate below has published, reproducible
