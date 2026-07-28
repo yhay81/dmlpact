@@ -18,6 +18,9 @@ cargo test --all-targets --locked
 cargo package --locked --allow-dirty
 ```
 
+The SQL policy boundary is continuously fuzzed. See [FUZZING.md](FUZZING.md)
+for the reproducible local command and crash-handling rules.
+
 Live tests require PostgreSQL 13+ and `psql`:
 
 ```bash

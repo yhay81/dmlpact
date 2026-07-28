@@ -1,0 +1,19 @@
+[package]
+name = "dmlpact-fuzz"
+version = "0.0.0"
+publish = false
+edition = "2021"
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+dmlpact = { path = ".." }
+libfuzzer-sys = "=0.4.13"
+
+[[bin]]
+name = "sql_document"
+path = "fuzz_targets/sql_document.rs"
+test = false
+doc = false
+bench = false

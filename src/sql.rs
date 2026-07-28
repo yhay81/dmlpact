@@ -69,6 +69,16 @@ pub fn read_and_analyze(path: &Path) -> AppResult<AnalyzedSql> {
             "the SQL file must be valid UTF-8",
         )
     })?;
+    analyze_sql(&raw)
+}
+
+/// Parses and enforces DMLPact's single-statement SQL policy without file I/O.
+///
+/// # Errors
+///
+/// Returns an error when the SQL exceeds the input bound, cannot be parsed, or
+/// uses a statement shape or expression denied by the safety contract.
+pub fn analyze_sql(raw: &str) -> AppResult<AnalyzedSql> {
     if u64::try_from(raw.len()).unwrap_or(u64::MAX) > MAX_SQL_BYTES {
         return Err(AppError::new(
             ErrorClass::Usage,
@@ -81,7 +91,7 @@ pub fn read_and_analyze(path: &Path) -> AppResult<AnalyzedSql> {
     }
 
     let dialect = PostgreSqlDialect {};
-    let statements = Parser::parse_sql(&dialect, &raw).map_err(|_| {
+    let statements = Parser::parse_sql(&dialect, raw).map_err(|_| {
         policy(
             "sql_parse_failed",
             "the SQL file is not valid supported PostgreSQL syntax",
