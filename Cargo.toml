@@ -1,0 +1,63 @@
+[package]
+name = "dmlpact"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.85"
+description = "Plan, constrain, apply, and audit PostgreSQL data changes"
+license = "MIT"
+repository = "https://github.com/yhay81/dmlpact"
+homepage = "https://github.com/yhay81/dmlpact"
+readme = "README.md"
+keywords = ["cli", "postgresql", "database", "safety", "audit"]
+categories = ["command-line-utilities", "database"]
+include = [
+    "src/**",
+    "tests/**",
+    "docs/**",
+    "Cargo.toml",
+    "Cargo.lock",
+    "rust-toolchain.toml",
+    "README.md",
+    "CONCEPT.md",
+    "ROADMAP.md",
+    "CHANGELOG.md",
+    "RELEASING.md",
+    "SECURITY.md",
+    "CONTRIBUTING.md",
+    "CODE_OF_CONDUCT.md",
+    "GOVERNANCE.md",
+    "SUPPORT.md",
+    "ADOPTERS.md",
+    "LICENSE",
+]
+
+[dependencies]
+clap = { version = "=4.6.4", features = ["derive"] }
+clap_complete = "=4.6.8"
+humantime = "=2.4.0"
+postgres = { version = "=0.19.14", features = ["with-serde_json-1"] }
+rustls = { version = "=0.23.36", default-features = false, features = ["ring", "std", "tls12"] }
+schemars = "=1.2.2"
+serde = { version = "=1.0.229", features = ["derive"] }
+serde_json = "=1.0.151"
+sha2 = "=0.11.0"
+sqlparser = { version = "=0.62.0", features = ["visitor"] }
+tokio-postgres-rustls = { version = "=0.14.0", features = ["native-certs", "ring"] }
+
+[dev-dependencies]
+assert_cmd = "=2.2.2"
+tempfile = "=3.27.0"
+
+[profile.release]
+lto = "thin"
+codegen-units = 1
+strip = true
+
+[lints.rust]
+unsafe_code = "forbid"
+
+[lints.clippy]
+all = "deny"
+unwrap_used = "deny"
+expect_used = "deny"
+panic = "deny"
