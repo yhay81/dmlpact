@@ -181,7 +181,9 @@ pub fn seal_plan(plan: &mut Plan) -> AppResult<()> {
 }
 
 pub fn verified_plan_sha256(plan: &Plan) -> AppResult<String> {
-    if plan.schema_version != PLAN_SCHEMA_VERSION || plan.tool_version != TOOL_VERSION {
+    if plan.schema_version != PLAN_SCHEMA_VERSION
+        || !is_supported_artifact_tool_version(&plan.tool_version)
+    {
         return Err(AppError::new(
             ErrorClass::Contract,
             "plan_version_unsupported",
@@ -311,7 +313,9 @@ pub fn verify_receipt(path: &Path) -> AppResult<ReceiptVerification> {
 }
 
 fn validate_event(event: &ReceiptEvent) -> AppResult<()> {
-    if event.schema_version != RECEIPT_SCHEMA_VERSION || event.tool_version != TOOL_VERSION {
+    if event.schema_version != RECEIPT_SCHEMA_VERSION
+        || !is_supported_artifact_tool_version(&event.tool_version)
+    {
         return Err(contract(
             "receipt_version_unsupported",
             "the receipt schema or tool version is not supported",
@@ -331,6 +335,10 @@ fn validate_event(event: &ReceiptEvent) -> AppResult<()> {
         ));
     }
     Ok(())
+}
+
+fn is_supported_artifact_tool_version(tool_version: &str) -> bool {
+    tool_version == "0.1.0" || tool_version == TOOL_VERSION
 }
 
 fn event_sha256(event: &ReceiptEvent) -> AppResult<String> {

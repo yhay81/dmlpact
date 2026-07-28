@@ -11,7 +11,7 @@ rechecks database identity, schema, target count, and the exact target-row
 fingerprint under a table lock, then either commits the exact SQL or refuses
 without executing it.
 
-Version 0.1 is deliberately narrow and conservative. It is suitable for
+Version 0.2 is deliberately narrow and conservative. It is suitable for
 evaluation and controlled automation, but it is not a substitute for backups,
 application invariants, least-privilege roles, or operational review.
 
@@ -38,7 +38,7 @@ Release archives include the binary, completions, documentation, checksums, and
 an SBOM:
 
 ```bash
-gh release download v0.1.0 --repo yhay81/dmlpact
+gh release download v0.2.0 --repo yhay81/dmlpact
 ```
 
 To build from source with the declared Rust 1.85 MSRV:

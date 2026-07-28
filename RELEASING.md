@@ -9,8 +9,8 @@ Releases are built only from signed annotated `vX.Y.Z` tags.
 4. Create and push a signed annotated tag:
 
    ```bash
-   git tag -s v0.1.0 -m "DMLPact v0.1.0"
-   git push origin v0.1.0
+   git tag -s v0.2.0 -m "DMLPact v0.2.0"
+   git push origin v0.2.0
    ```
 
 5. The release workflow validates the tag signature, builds native archives,
