@@ -10,6 +10,9 @@ behavior while preserving documented contracts where practical.
 
 - Added a digest-pinned v0.1 plan and two-event receipt corpus with exact
   round trips and twelve declared artifact mutations.
+- Added a reproducible PostgreSQL benchmark for 10k/100k target plans,
+  exact bounded mutations, verified receipts, and lock-timeout refusal with
+  raw runner and database identity retained for 90 days.
 
 ### Changed
 
