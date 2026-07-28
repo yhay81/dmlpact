@@ -4,6 +4,14 @@ All notable changes are documented here. The project follows Semantic
 Versioning before 1.0 with minor versions allowed to change unsupported
 behavior while preserving documented contracts where practical.
 
+## [Unreleased]
+
+### Changed
+
+- Defined measurable v1.0 compatibility, SQL classification, mutation
+  correctness, TLS and artifact security, performance, delivery, maintenance,
+  contribution, and repeat-adoption gates.
+
 ## [0.1.0] - 2026-07-28
 
 ### Added
@@ -20,4 +28,5 @@ behavior while preserving documented contracts where practical.
 - Signed release workflow with checksums, CycloneDX SBOM, and build
   attestations.
 
+[Unreleased]: https://github.com/yhay81/dmlpact/compare/v0.1.0...HEAD
 [0.1.0]: https://github.com/yhay81/dmlpact/releases/tag/v0.1.0
