@@ -6,10 +6,11 @@ Until 1.0, only the latest released minor version receives security fixes.
 
 ## Report a vulnerability
 
-Use GitHub's private vulnerability reporting for this repository. Do not open a
-public issue for suspected vulnerabilities involving SQL boundary bypass,
-credential exposure, TLS downgrade, plan/receipt integrity, row-limit escape,
-or unintended execution.
+Use
+[GitHub private vulnerability reporting](https://github.com/yhay81/dmlpact/security/advisories/new).
+Do not open a public issue for suspected vulnerabilities involving SQL boundary
+bypass, credential exposure, TLS downgrade, plan/receipt integrity, row-limit
+escape, or unintended execution.
 
 Include the affected version, platform, PostgreSQL version, minimal
 reproduction, expected/observed behavior, and impact. Remove real credentials,
@@ -37,4 +38,5 @@ See [RELEASING.md](RELEASING.md).
 Pull requests are checked with GitHub Dependency Review and fail when they
 introduce a dependency with a known moderate-or-higher-severity vulnerability.
 A weekly OpenSSF Scorecard analysis publishes authenticated results and uploads
-SARIF findings to GitHub code scanning.
+SARIF findings to GitHub code scanning. CodeQL default setup analyzes Rust and
+workflow sources with extended security queries.
