@@ -17,6 +17,9 @@ behavior while preserving documented contracts where practical.
   with every action pinned to an immutable commit SHA.
 - Enabled CodeQL default setup and restricted release and dependency-audit
   credentials to the minimum permissions required by each job.
+- Added production-path SQL policy fuzzing with accepted INSERT, UPDATE, and
+  DELETE seeds, five-minute pull-request checks, and weekly ClusterFuzzLite
+  AddressSanitizer batches.
 
 ## [0.2.0] - 2026-07-29
 
