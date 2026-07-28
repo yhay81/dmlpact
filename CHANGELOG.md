@@ -6,6 +6,14 @@ behavior while preserving documented contracts where practical.
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-07-29
+
+### Compatibility
+
+- Preserved the public v0.1 CLI and machine contracts. The v0.2 reader accepts
+  the digest-pinned v0.1 plan and receipt corpus byte-for-byte; no migration is
+  required.
+
 ### Added
 
 - Added a digest-pinned v0.1 plan and two-event receipt corpus with exact
@@ -16,6 +24,8 @@ behavior while preserving documented contracts where practical.
 
 ### Changed
 
+- Decoupled artifact acceptance from the current binary version so v0.2 can
+  verify the published v0.1 plan and receipt contracts.
 - Defined measurable v1.0 compatibility, SQL classification, mutation
   correctness, TLS and artifact security, performance, delivery, maintenance,
   contribution, and repeat-adoption gates.
@@ -36,5 +46,6 @@ behavior while preserving documented contracts where practical.
 - Signed release workflow with checksums, CycloneDX SBOM, and build
   attestations.
 
-[Unreleased]: https://github.com/yhay81/dmlpact/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/yhay81/dmlpact/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/yhay81/dmlpact/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/yhay81/dmlpact/releases/tag/v0.1.0
