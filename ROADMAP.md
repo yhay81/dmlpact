@@ -14,7 +14,8 @@
 
 ## v0.2 — operational evaluation
 
-- [ ] Benchmark planning overhead and lock behavior across table sizes.
+- [x] Publish an initial reproducible 10k/100k planning, apply, receipt, and
+  bounded lock-contention baseline with raw hosted-runner measurements.
 - [ ] Add policy files for centrally managed defaults and table allowlists.
 - [ ] Add receipt reconciliation guidance and optional audit-log correlation.
 - [ ] Evaluate parameter binding without weakening exact proposal identity.

@@ -166,6 +166,11 @@ The checked-in
 sealed v0.1 plan and complete hash-linked receipt. CI checks exact bytes,
 offline acceptance, and declared fail-closed mutations on every supported OS.
 
+The versioned [PostgreSQL performance harness](benchmarks/README.md) publishes
+raw 10,000- and 100,000-target plan/apply/receipt baselines plus a bounded lock
+contention refusal. Initial measurements remain observation-only until the
+documented p95 and client/server timing-separation policy is established.
+
 ## Security and limitations
 
 Read [the safety model](docs/safety-model.md) and [SECURITY.md](SECURITY.md)
