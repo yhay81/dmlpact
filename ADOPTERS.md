@@ -2,6 +2,11 @@
 
 No public adopters have been reported yet.
 
+The shortest reporting path is the public
+[adoption report form](https://github.com/yhay81/dmlpact/issues/new?template=adoption_report.yml).
+Use a pull request instead when the evidence should be committed directly to
+this file.
+
 If you evaluate DMLPact, open a Discussion or pull request with information you
 are comfortable sharing:
 
