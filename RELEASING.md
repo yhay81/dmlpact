@@ -9,8 +9,8 @@ Releases are built only from signed annotated `vX.Y.Z` tags.
 4. Create and push a signed annotated tag:
 
    ```bash
-   git tag -s v0.2.0 -m "DMLPact v0.2.0"
-   git push origin v0.2.0
+   git tag -s v0.3.0 -m "DMLPact v0.3.0"
+   git push origin v0.3.0
    ```
 
 5. The release workflow validates the tag signature, builds native archives,
@@ -21,13 +21,13 @@ Releases are built only from signed annotated `vX.Y.Z` tags.
 
    ```bash
    sha256sum --check SHA256SUMS
-   gh attestation verify dmlpact-v0.2.0-linux-x86_64.tar.gz \
+   gh attestation verify dmlpact-v0.3.0-linux-x86_64.tar.gz \
      --repo yhay81/dmlpact
-   gh attestation verify dmlpact-v0.2.0-linux-x86_64.tar.gz \
+   gh attestation verify dmlpact-v0.3.0-linux-x86_64.tar.gz \
      --repo yhay81/dmlpact \
-     --bundle dmlpact-v0.2.0-linux-x86_64.tar.gz.intoto.jsonl \
+     --bundle dmlpact-v0.3.0-linux-x86_64.tar.gz.intoto.jsonl \
      --signer-workflow yhay81/dmlpact/.github/workflows/release.yml
-   gh attestation verify dmlpact-v0.2.0-linux-x86_64.tar.gz \
+   gh attestation verify dmlpact-v0.3.0-linux-x86_64.tar.gz \
      --repo yhay81/dmlpact \
      --predicate-type https://cyclonedx.org/bom
    ```
