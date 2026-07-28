@@ -1,0 +1,32 @@
+name: Bug report
+description: Report reproducible incorrect or unsafe behavior
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: Do not include credentials, production SQL/data, or private receipts. Report security issues privately.
+  - type: input
+    id: version
+    attributes:
+      label: DMLPact version
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: OS and PostgreSQL version
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Redacted minimal reproduction
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Expected and observed behavior
+    validations:
+      required: true
