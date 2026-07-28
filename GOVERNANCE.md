@@ -17,3 +17,10 @@ As sustained contributors emerge, commit and release access can be added based
 on demonstrated judgment, review quality, reliability, and adherence to the
 security model. Governance will be revisited before v1.0 or when a second
 maintainer joins.
+
+## Continuity
+
+[MAINTAINER_CONTINUITY.md](MAINTAINER_CONTINUITY.md) records the unmitigated
+single-maintainer authority risks, fail-closed signing-key rotation, and a
+monthly public recovery drill. The drill reduces data-recovery uncertainty but
+does not satisfy DMLPact's mandatory two-maintainer v1.0 gate.
