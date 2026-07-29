@@ -38,7 +38,7 @@ Release archives include the binary, completions, documentation, checksums, and
 an SBOM:
 
 ```bash
-gh release download v0.2.0 --repo yhay81/dmlpact
+gh release download v0.3.0 --repo yhay81/dmlpact
 ```
 
 To build from source with the declared Rust 1.85 MSRV:

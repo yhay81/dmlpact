@@ -21,11 +21,12 @@
 - [ ] Evaluate parameter binding without weakening exact proposal identity.
 - [ ] Expand PostgreSQL version and proxy compatibility fixtures.
 
-Current compatibility evidence: the checked-in v0.1 corpus pins a sealed plan
-and complete two-event receipt byte-for-byte. Twelve declared mutations cover
-unknown fields, schema/tool versions, plan hashes, event hashes, receipt
-identity, timestamps, and previous-event linkage. A second released minor
-version and migration or no-migration evidence are still required.
+Current compatibility evidence: v0.2 and v0.3 provide two released
+compatibility cycles. The current v0.3 reader accepts the digest-pinned v0.1
+sealed plan and complete two-event receipt byte-for-byte. Twelve declared
+mutations cover unknown fields, schema/tool versions, plan hashes, event
+hashes, receipt identity, timestamps, and previous-event linkage. The v0.2 and
+v0.3 release notes record contract preservation; no migration is required.
 
 ## v1.0 quality criteria
 

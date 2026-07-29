@@ -7,6 +7,11 @@ The shortest reporting path is the public
 Use a pull request instead when the evidence should be committed directly to
 this file.
 
+Reports credited toward the v1.0 gate identify the reporter's relationship to
+the project plus first and latest use dates. Repeat-use credit requires two
+independent observations at least 30 days apart; maintainer self-evaluation,
+downloads, clones, and stars do not count.
+
 If you evaluate DMLPact, open a Discussion or pull request with information you
 are comfortable sharing:
 
