@@ -435,7 +435,7 @@ jq -n \
       workflow_100k_wall_seconds:
         ($plan_100k_metrics[0].wall_seconds + $apply_100k_metrics[0].wall_seconds)
     },
-    threshold_status: "observation_only"
+    threshold_status: "raw_sample"
   }' >"${result_path}"
 
 jq -e '

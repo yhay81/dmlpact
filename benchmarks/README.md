@@ -1,8 +1,8 @@
 # DMLPact performance baseline
 
-This directory defines the reproducible, observation-only PostgreSQL baseline
-used to calibrate DMLPact's v1.0 performance, locking, and resource thresholds.
-Timing and memory are not yet release thresholds.
+This directory defines and enforces DMLPact's reproducible PostgreSQL v1.0
+performance and resource thresholds on pull requests and in the weekly
+scheduled benchmark.
 
 ## Workloads
 
@@ -29,11 +29,30 @@ and the exact DMLPact commit. Database setup and the release build are excluded.
 
 Apply timing includes both DMLPact's locked client-side revalidation and server
 mutation execution. It is an end-to-end upper bound, not an isolated claim
-about the v1.0 client-overhead threshold.
+about client time. Enforcing the stronger end-to-end limit nevertheless proves
+that client overhead alone cannot exceed that same limit.
+
+Each sample performs untimed build and database reset. The workflow discards
+one warm-up and captures 20 samples against the same digest-pinned PostgreSQL
+image.
+
+## Enforced thresholds
+
+The versioned policy in `thresholds.json` enforces:
+
+- 10,000-target plan generation below 5 seconds p95;
+- locked revalidation plus server mutation below 2 seconds p95;
+- peak RSS no greater than 256 MiB in every bounded sample, including the
+  100,000-target workflow.
+
+Twenty samples make nearest-rank p95 the second-slowest observation. Once
+`baseline-ubuntu24.json` is present, metrics must also remain within the
+stricter of the absolute limit and the versioned noise allowance: 1.5 times
+baseline or baseline plus 100 ms for time and 16 MiB for memory.
 
 ## Run
 
-The supported environment is the `ubuntu-latest` runner and digest-pinned
+The supported environment is the `ubuntu-24.04` x86_64 runner and digest-pinned
 `postgres:17-alpine` service selected by `.github/workflows/benchmark.yml`. For
 safety, `run.sh` refuses to reset any database whose current name is not exactly
 `dmlpact_benchmark`.
@@ -47,13 +66,17 @@ benchmarks/run.sh benchmark-results.json
 jq . benchmark-results.json
 ```
 
+Run evaluator tests with:
+
+```bash
+python3 -m unittest benchmarks/test_evaluate.py
+```
+
 GNU `time`, GNU `stat`, `timeout`, `psql`, `jq`, Git, Cargo, and the locked Rust
 dependency graph are required. Plans and receipts are temporary and are not
 uploaded.
 
-The workflow retains raw JSON for 90 days. Pull requests gate exact mutation,
-receipt, resource-bound, and lock-refusal semantics—not observed timing or
-memory. A single shared-runner sample is not a regression and does not
-establish p95. Before enabling v1.0 thresholds, publish the sample and warm-up
-policy, client/server timing separation, baseline window, p95 calculation, and
-a noise-aware regression rule.
+The workflow uploads all 20 raw samples and the aggregate evaluation for 90
+days, including raw samples from a failed threshold evaluation. The checked-in
+baseline is refreshed only from a successful evaluation of the exact commit on
+the fixed runner class.

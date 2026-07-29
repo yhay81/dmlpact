@@ -1,0 +1,60 @@
+{
+  "schema_version": "benchmark.thresholds.v1",
+  "benchmark_schema_version": "dmlpact.benchmark.v1",
+  "runner": {
+    "os": "Linux",
+    "arch": "x86_64",
+    "image": "ubuntu24"
+  },
+  "warmup_count": 1,
+  "sample_count": 20,
+  "metrics": [
+    {
+      "id": "plan_10k_targets_wall_p95",
+      "description": "Plan generation for the 10,000-target PostgreSQL fixture",
+      "source": {
+        "kind": "measurement_process",
+        "measurement_id": "plan_10k_targets",
+        "field": "wall_seconds"
+      },
+      "statistic": "p95",
+      "maximum": 5.0,
+      "unit": "seconds",
+      "regression": {
+        "max_ratio": 1.5,
+        "absolute_tolerance": 0.1
+      }
+    },
+    {
+      "id": "apply_10k_targets_wall_p95",
+      "description": "Locked revalidation plus server execution for the 10,000-target fixture",
+      "source": {
+        "kind": "measurement_process",
+        "measurement_id": "apply_10k_targets",
+        "field": "wall_seconds"
+      },
+      "statistic": "p95",
+      "maximum": 2.0,
+      "unit": "seconds",
+      "regression": {
+        "max_ratio": 1.5,
+        "absolute_tolerance": 0.1
+      }
+    },
+    {
+      "id": "bounded_peak_rss_max",
+      "description": "Maximum DMLPact peak resident memory across all bounded workloads",
+      "source": {
+        "kind": "derived",
+        "field": "max_peak_rss_mib"
+      },
+      "statistic": "max",
+      "maximum": 256.0,
+      "unit": "MiB",
+      "regression": {
+        "max_ratio": 1.5,
+        "absolute_tolerance": 16.0
+      }
+    }
+  ]
+}
