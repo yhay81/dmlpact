@@ -17,7 +17,9 @@
 - [x] Publish an initial reproducible 10k/100k planning, apply, receipt, and
   bounded lock-contention baseline with raw hosted-runner measurements.
 - [ ] Add policy files for centrally managed defaults and table allowlists.
-- [ ] Add receipt reconciliation guidance and optional audit-log correlation.
+- [x] Add receipt reconciliation guidance and explicit handling for a terminal
+  receipt durability failure after a database commit attempt.
+- [ ] Add optional audit-log correlation.
 - [ ] Evaluate parameter binding without weakening exact proposal identity.
 - [ ] Expand PostgreSQL version and proxy compatibility fixtures.
 
@@ -27,6 +29,8 @@ sealed plan and complete two-event receipt byte-for-byte. Twelve declared
 mutations cover unknown fields, schema/tool versions, plan hashes, event
 hashes, receipt identity, timestamps, and previous-event linkage. The v0.2 and
 v0.3 release notes record contract preservation; no migration is required.
+Commit-attempt/terminal-receipt-failure handling preserves the receipt schema
+and requires reconciliation rather than allowing an unsafe retry.
 
 ## v1.0 quality criteria
 

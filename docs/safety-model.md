@@ -50,6 +50,14 @@ Before DML, DMLPact durably creates a prepared receipt, starts a
 Any mismatch refuses before statement execution. After execution, affected rows
 must exactly equal the pre-count. Otherwise the transaction rolls back.
 
+After an observed successful database commit, failure to durably publish the
+terminal receipt is reported as `committed_receipt_finalization_uncertain` with
+exit code 5. The database commit is known to have succeeded; only terminal
+receipt durability is uncertain. If both the commit outcome and terminal
+receipt durability cannot be confirmed, the error code is
+`commit_receipt_finalization_uncertain`. Operators must not retry the DML and
+must follow the [receipt reconciliation guide](receipt-reconciliation.md).
+
 ## Known limits
 
 - Table-level locking can block writers and may be operationally expensive.
@@ -68,6 +76,9 @@ must exactly equal the pre-count. Otherwise the transaction rolls back.
 - A server or privileged role can misrepresent catalog/state evidence.
 - `uncertain` means operators must reconcile the database using the plan and
   receipt; retrying blindly may duplicate intended effects.
+- The PostgreSQL transaction and local receipt file cannot commit atomically.
+  An incomplete, invalid, or not-durably-confirmed terminal receipt requires
+  reconciliation even when the database outcome is known.
 
 ## Operational recommendations
 

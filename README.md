@@ -129,7 +129,12 @@ rolls back. A commit whose result cannot be observed is recorded as
 The receipt is two-event NDJSON: a durable `prepared` event written before the
 database operation and one terminal `committed`, `rolled_back`, `refused`, or
 `uncertain` event. Each event hashes its content and links to the previous
-event.
+event. If durable publication of a terminal event cannot be confirmed after a
+commit attempt, apply exits with code 5 using
+`committed_receipt_finalization_uncertain` for an observed successful commit or
+`commit_receipt_finalization_uncertain` when the database outcome is also
+unknown. Do not retry the DML; preserve the prepared receipt and follow the
+[receipt reconciliation guide](docs/receipt-reconciliation.md).
 
 ## Supported SQL
 
@@ -177,12 +182,14 @@ regression envelope against the checked-in baseline.
 
 ## Security and limitations
 
-Read [the safety model](docs/safety-model.md) and [SECURITY.md](SECURITY.md)
-before using DMLPact with valuable data. Trigger acknowledgement does not make
-trigger side effects transactional outside PostgreSQL. Row-level security can
-make visibility role-dependent. Environment variables can be visible to other
-same-user processes on some systems. A valid receipt proves DMLPact's observed
-workflow; it does not prove business correctness.
+Read [the safety model](docs/safety-model.md), the
+[receipt reconciliation guide](docs/receipt-reconciliation.md), and
+[SECURITY.md](SECURITY.md) before using DMLPact with valuable data. Trigger
+acknowledgement does not make trigger side effects transactional outside
+PostgreSQL. Row-level security can make visibility role-dependent. Environment
+variables can be visible to other same-user processes on some systems. A valid
+receipt proves DMLPact's observed workflow; it does not prove business
+correctness.
 
 ## Project
 
