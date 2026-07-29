@@ -5,12 +5,16 @@ use std::fs;
 use std::path::{Path, PathBuf};
 
 use dmlpact::integrity::{sha256_bytes, sha256_json};
-use dmlpact::model::ReceiptEvent;
+use dmlpact::model::{ReceiptEvent, TOOL_VERSION};
 use dmlpact::receipt::{read_plan, verify_receipt};
 use serde_json::Value;
 
-fn corpus_root() -> PathBuf {
-    Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures/contracts/v0.1")
+const RELEASE_CORPORA: &[(&str, &str)] = &[("v0.1", "0.1.0"), ("v0.2", "0.2.0"), ("v0.3", "0.3.0")];
+
+fn corpus_root(version: &str) -> PathBuf {
+    Path::new(env!("CARGO_MANIFEST_DIR"))
+        .join("tests/fixtures/contracts")
+        .join(version)
 }
 
 fn read_json(path: &Path) -> Value {
@@ -40,60 +44,82 @@ fn mutate(document: &mut Value, operation: &str, pointer: &str, value: Value) {
 }
 
 #[test]
-fn current_readers_accept_exact_v01_artifacts() {
-    let root = corpus_root();
-    let manifest = read_json(&root.join("manifest.json"));
-    assert_eq!(manifest["schema_version"], "dmlpact.artifact-corpus/v1");
-    let mut paths = BTreeSet::new();
-    for entry in manifest["accepted"].as_array().expect("accepted entries") {
-        let relative = entry["path"].as_str().expect("accepted path");
-        assert!(paths.insert(relative.to_owned()));
-        let bytes = fs::read(root.join(relative)).expect("read accepted artifact");
-        assert_eq!(sha256_bytes(&bytes), entry["sha256"]);
+fn current_readers_accept_every_released_artifact_corpus() {
+    let mut covered_tool_versions = BTreeSet::new();
+
+    for (corpus_version, expected_tool_version) in RELEASE_CORPORA {
+        let root = corpus_root(corpus_version);
+        let manifest = read_json(&root.join("manifest.json"));
+        assert_eq!(manifest["schema_version"], "dmlpact.artifact-corpus/v1");
+        let mut paths = BTreeSet::new();
+        for entry in manifest["accepted"].as_array().expect("accepted entries") {
+            let relative = entry["path"].as_str().expect("accepted path");
+            assert!(paths.insert(relative.to_owned()));
+            let bytes = fs::read(root.join(relative)).expect("read accepted artifact");
+            assert_eq!(
+                sha256_bytes(&bytes),
+                entry["sha256"],
+                "digest for {corpus_version}/{relative}"
+            );
+        }
+        assert_eq!(
+            paths,
+            BTreeSet::from([
+                "delete.plan.json".to_owned(),
+                "delete.receipt.ndjson".to_owned()
+            ])
+        );
+
+        let plan_path = root.join("delete.plan.json");
+        let plan_bytes = fs::read(&plan_path).expect("read plan");
+        let plan = read_plan(&plan_path).expect("verify golden plan");
+        assert_eq!(plan.tool_version, *expected_tool_version);
+        assert!(covered_tool_versions.insert(plan.tool_version.clone()));
+        assert_eq!(
+            format!(
+                "{}\n",
+                serde_json::to_string_pretty(&plan).expect("serialize plan")
+            )
+            .as_bytes(),
+            plan_bytes
+        );
+
+        let receipt_path = root.join("delete.receipt.ndjson");
+        let receipt_bytes = fs::read(&receipt_path).expect("read receipt");
+        let events = receipt_bytes
+            .split(|byte| *byte == b'\n')
+            .filter(|line| !line.is_empty())
+            .map(|line| serde_json::from_slice::<ReceiptEvent>(line).expect("parse receipt event"))
+            .collect::<Vec<_>>();
+        assert!(events
+            .iter()
+            .all(|event| event.tool_version == *expected_tool_version));
+        assert_eq!(
+            events[0].plan_sha256,
+            plan.plan_sha256.clone().expect("plan hash")
+        );
+        let serialized = events
+            .iter()
+            .map(|event| serde_json::to_string(event).expect("serialize receipt event"))
+            .collect::<Vec<_>>()
+            .join("\n")
+            + "\n";
+        assert_eq!(serialized.as_bytes(), receipt_bytes);
+        let verification = verify_receipt(&receipt_path).expect("verify golden receipt");
+        assert!(verification.integrity_valid);
+        assert!(verification.complete);
+        assert_eq!(verification.event_count, 2);
     }
-    assert_eq!(
-        paths,
-        BTreeSet::from([
-            "delete.plan.json".to_owned(),
-            "delete.receipt.ndjson".to_owned()
-        ])
-    );
 
-    let plan_path = root.join("delete.plan.json");
-    let plan_bytes = fs::read(&plan_path).expect("read plan");
-    let plan = read_plan(&plan_path).expect("verify golden plan");
-    assert_eq!(
-        format!(
-            "{}\n",
-            serde_json::to_string_pretty(&plan).expect("serialize plan")
-        )
-        .as_bytes(),
-        plan_bytes
+    assert!(
+        covered_tool_versions.contains(TOOL_VERSION),
+        "the current release must have a digest-pinned artifact corpus"
     );
-
-    let receipt_path = root.join("delete.receipt.ndjson");
-    let receipt_bytes = fs::read(&receipt_path).expect("read receipt");
-    let events = receipt_bytes
-        .split(|byte| *byte == b'\n')
-        .filter(|line| !line.is_empty())
-        .map(|line| serde_json::from_slice::<ReceiptEvent>(line).expect("parse receipt event"))
-        .collect::<Vec<_>>();
-    let serialized = events
-        .iter()
-        .map(|event| serde_json::to_string(event).expect("serialize receipt event"))
-        .collect::<Vec<_>>()
-        .join("\n")
-        + "\n";
-    assert_eq!(serialized.as_bytes(), receipt_bytes);
-    let verification = verify_receipt(&receipt_path).expect("verify golden receipt");
-    assert!(verification.integrity_valid);
-    assert!(verification.complete);
-    assert_eq!(verification.event_count, 2);
 }
 
 #[test]
 fn declared_v01_mutations_fail_closed() {
-    let root = corpus_root();
+    let root = corpus_root("v0.1");
     let manifest = read_json(&root.join("manifest.json"));
     let mut ids = BTreeSet::new();
 

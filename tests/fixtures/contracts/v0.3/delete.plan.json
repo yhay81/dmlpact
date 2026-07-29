@@ -1,0 +1,43 @@
+{
+  "schema_version": "dmlpact.plan.v1",
+  "tool_version": "0.3.0",
+  "plan_id": "plan_golden_delete",
+  "created_at_unix_ms": 1000,
+  "expires_at_unix_ms": 2000,
+  "statement_kind": "delete",
+  "requested_table": "public.items",
+  "sql_file_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "normalized_sql_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "count_query_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  "target_query_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+  "explain_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+  "limits": {
+    "max_rows": 1,
+    "statement_timeout_ms": 1000,
+    "lock_timeout_ms": 100
+  },
+  "transport_policy": "insecure_localhost",
+  "allow_triggers": false,
+  "allow_row_security": false,
+  "preconditions": {
+    "database": {
+      "database": "test",
+      "role": "test",
+      "search_path": "public",
+      "server_version_num": 150000,
+      "endpoint_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "server_address": "127.0.0.1",
+      "server_port": 5432,
+      "settings": {}
+    },
+    "canonical_table": "\"public\".\"items\"",
+    "table_schema_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "target_count": 1,
+    "target_set_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "relation_kind": "r",
+    "user_trigger_count": 0,
+    "rewrite_rule_count": 0,
+    "row_security": false
+  },
+  "plan_sha256": "0f859f40f6ef8c5964342e6adadcec5e0492ea05e60d2673688a4988c4d64e75"
+}

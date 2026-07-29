@@ -15,6 +15,7 @@ use crate::{
 
 const MAX_PLAN_BYTES: u64 = 1_048_576;
 const MAX_RECEIPT_BYTES: u64 = 2_097_152;
+const PREVIOUSLY_SUPPORTED_ARTIFACT_TOOL_VERSIONS: &[&str] = &["0.1.0", "0.2.0"];
 
 pub struct ReceiptJournal {
     file: File,
@@ -338,7 +339,8 @@ fn validate_event(event: &ReceiptEvent) -> AppResult<()> {
 }
 
 fn is_supported_artifact_tool_version(tool_version: &str) -> bool {
-    tool_version == "0.1.0" || tool_version == TOOL_VERSION
+    tool_version == TOOL_VERSION
+        || PREVIOUSLY_SUPPORTED_ARTIFACT_TOOL_VERSIONS.contains(&tool_version)
 }
 
 fn event_sha256(event: &ReceiptEvent) -> AppResult<String> {

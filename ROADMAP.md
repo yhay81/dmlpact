@@ -24,11 +24,13 @@
 - [ ] Expand PostgreSQL version and proxy compatibility fixtures.
 
 Current compatibility evidence: v0.2 and v0.3 provide two released
-compatibility cycles. The current v0.3 reader accepts the digest-pinned v0.1
-sealed plan and complete two-event receipt byte-for-byte. Twelve declared
-mutations cover unknown fields, schema/tool versions, plan hashes, event
-hashes, receipt identity, timestamps, and previous-event linkage. The v0.2 and
-v0.3 release notes record contract preservation; no migration is required.
+compatibility cycles. The current v0.3 reader accepts digest-pinned v0.1, v0.2,
+and v0.3 sealed plans and complete two-event receipts byte-for-byte. Twelve
+declared mutations cover unknown fields, schema/tool versions, plan hashes,
+event hashes, receipt identity, timestamps, and previous-event linkage. The
+compatibility test also requires the current tool version to have its own
+golden corpus, so a future version bump cannot silently drop or omit evidence.
+No migration is required.
 Commit-attempt/terminal-receipt-failure handling preserves the receipt schema
 and requires reconciliation rather than allowing an unsafe retry.
 
