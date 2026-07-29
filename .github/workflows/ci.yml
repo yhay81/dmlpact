@@ -49,6 +49,10 @@ jobs:
               if not records:
                   raise SystemExit(f"{fixture} has no events")
           PY
+      - name: SQL policy corpus
+        run: |
+          python3 tests/fixtures/sql-policy/v0.1/generate_corpus.py --check
+          cargo test --locked --test sql_policy_corpus
       - name: Machine contracts and completions
         shell: bash
         run: |

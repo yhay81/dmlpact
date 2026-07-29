@@ -174,6 +174,14 @@ The checked-in
 sealed v0.1 plan and complete hash-linked receipt. CI checks exact bytes,
 offline acceptance, and declared fail-closed mutations on every supported OS.
 
+The MIT-licensed
+[SQL policy corpus](tests/fixtures/sql-policy/README.md) freezes 1,000
+hand-labeled INSERT, UPDATE, DELETE, CTE, subquery, expression, quoting,
+comment, multi-statement, unsupported, and ambiguous cases. CI independently
+recomputes the pinned result: all 400 declared-supported statements are
+accepted, all 600 unsupported or ambiguous statements are rejected, and all
+1,000 statement classifications match exactly.
+
 The versioned [PostgreSQL performance harness](benchmarks/README.md) enforces
 10,000-target plan/apply limits and bounded peak memory from 20 samples on
 Ubuntu 24.04. It also exercises the 100,000-target workflow and a bounded lock

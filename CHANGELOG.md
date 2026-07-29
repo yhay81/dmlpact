@@ -14,6 +14,9 @@ behavior while preserving documented contracts where practical.
   and Intel, and Windows x86_64 using the published instructions.
 - Enforced the published v1.0 plan, apply, and bounded-memory thresholds from
   20-sample PostgreSQL benchmark evidence on Ubuntu 24.04.
+- Added a deterministic, MIT-licensed corpus of 1,000 hand-labeled SQL policy
+  cases with exact supported-acceptance, unsupported-rejection, and
+  classification metrics enforced in CI.
 
 ### Fixed
 
