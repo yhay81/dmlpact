@@ -12,6 +12,8 @@ behavior while preserving documented contracts where practical.
   installation, update, and removal guidance.
 - Added weekly installation smoke tests on Linux x86_64, macOS Apple Silicon
   and Intel, and Windows x86_64 using the published instructions.
+- Enforced the published v1.0 plan, apply, and bounded-memory thresholds from
+  20-sample PostgreSQL benchmark evidence on Ubuntu 24.04.
 
 ## [0.3.0] - 2026-07-29
 

@@ -169,10 +169,11 @@ The checked-in
 sealed v0.1 plan and complete hash-linked receipt. CI checks exact bytes,
 offline acceptance, and declared fail-closed mutations on every supported OS.
 
-The versioned [PostgreSQL performance harness](benchmarks/README.md) publishes
-raw 10,000- and 100,000-target plan/apply/receipt baselines plus a bounded lock
-contention refusal. Initial measurements remain observation-only until the
-documented p95 and client/server timing-separation policy is established.
+The versioned [PostgreSQL performance harness](benchmarks/README.md) enforces
+10,000-target plan/apply limits and bounded peak memory from 20 samples on
+Ubuntu 24.04. It also exercises the 100,000-target workflow and a bounded lock
+contention refusal, uploads every raw sample, and applies a noise-aware
+regression envelope against the checked-in baseline.
 
 ## Security and limitations
 
