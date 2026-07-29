@@ -19,6 +19,9 @@ behavior while preserving documented contracts where practical.
 
 - Rejected performance evidence with a non-canonical commit identity,
   incomplete runner metadata, a non-raw sample marker, or reused sample paths.
+- Reported terminal receipt durability failure after a database commit attempt
+  as reconciliation-required exit code 5 instead of a generic I/O failure that
+  could invite an unsafe retry.
 
 ## [0.3.0] - 2026-07-29
 

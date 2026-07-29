@@ -258,6 +258,10 @@ fn capabilities() -> Capabilities {
         safety_defaults: BTreeMap::from([
             ("apply_receipt".to_owned(), "required_new_path".to_owned()),
             (
+                "receipt_finalization_failure".to_owned(),
+                "exit_5_reconciliation_required".to_owned(),
+            ),
+            (
                 "connection_secret".to_owned(),
                 "environment_only".to_owned(),
             ),

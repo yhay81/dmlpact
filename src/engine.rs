@@ -11,8 +11,8 @@ use crate::{
     error::{AppError, AppResult, ErrorClass},
     integrity::{sha256_bytes, sha256_json, unix_ms},
     model::{
-        ApplyResult, InspectReport, Limits, LintReport, Plan, PlanPreconditions, ReceiptResult,
-        ReceiptState, PLAN_SCHEMA_VERSION, TOOL_VERSION,
+        ApplyResult, InspectReport, Limits, LintReport, Plan, PlanPreconditions, ReceiptEvent,
+        ReceiptResult, ReceiptState, PLAN_SCHEMA_VERSION, TOOL_VERSION,
     },
     receipt::{read_plan, seal_plan, write_plan_new, ReceiptJournal},
     sql::{read_and_analyze, AnalyzedSql},
@@ -387,9 +387,8 @@ fn apply_after_receipt(
         );
     }
     if transaction.commit().is_err() {
-        return finish(
+        return finish_uncertain(
             journal,
-            ReceiptState::Uncertain,
             ReceiptResult {
                 affected_rows: Some(affected),
                 reason_code: "commit_outcome_uncertain".to_owned(),
@@ -399,9 +398,8 @@ fn apply_after_receipt(
             },
         );
     }
-    finish(
+    finish_committed(
         journal,
-        ReceiptState::Committed,
         ReceiptResult {
             affected_rows: Some(affected),
             reason_code: "applied".to_owned(),
@@ -410,6 +408,26 @@ fn apply_after_receipt(
             table_schema_sha256: Some(schema_hash),
         },
     )
+}
+
+trait ReceiptFinalizer {
+    fn path(&self) -> &Path;
+    fn receipt_id(&self) -> &str;
+    fn finalize(self, state: ReceiptState, result: ReceiptResult) -> AppResult<ReceiptEvent>;
+}
+
+impl ReceiptFinalizer for ReceiptJournal {
+    fn path(&self) -> &Path {
+        ReceiptJournal::path(self)
+    }
+
+    fn receipt_id(&self) -> &str {
+        ReceiptJournal::receipt_id(self)
+    }
+
+    fn finalize(self, state: ReceiptState, result: ReceiptResult) -> AppResult<ReceiptEvent> {
+        ReceiptJournal::finalize(self, state, result)
+    }
 }
 
 fn finish_refused(
@@ -431,8 +449,34 @@ fn finish_refused(
     )
 }
 
-fn finish(
-    journal: ReceiptJournal,
+fn finish_committed<J: ReceiptFinalizer>(
+    journal: J,
+    result: ReceiptResult,
+) -> AppResult<ApplyResult> {
+    finish(journal, ReceiptState::Committed, result).map_err(|_| {
+        AppError::new(
+            ErrorClass::Contract,
+            "committed_receipt_finalization_uncertain",
+            "the database commit succeeded, but durable terminal receipt publication could not be confirmed; do not retry the DML; verify the prepared receipt and reconcile it with the database",
+        )
+    })
+}
+
+fn finish_uncertain<J: ReceiptFinalizer>(
+    journal: J,
+    result: ReceiptResult,
+) -> AppResult<ApplyResult> {
+    finish(journal, ReceiptState::Uncertain, result).map_err(|_| {
+        AppError::new(
+            ErrorClass::Contract,
+            "commit_receipt_finalization_uncertain",
+            "the database commit outcome and durable terminal receipt publication could not be confirmed; do not retry the DML; verify the prepared receipt and reconcile it with the database",
+        )
+    })
+}
+
+fn finish<J: ReceiptFinalizer>(
+    journal: J,
     state: ReceiptState,
     result: ReceiptResult,
 ) -> AppResult<ApplyResult> {
@@ -585,4 +629,94 @@ fn database_operation_error(code: &'static str) -> AppError {
         code,
         "the PostgreSQL operation failed; connection details were not emitted",
     )
+}
+
+#[cfg(test)]
+#[allow(clippy::expect_used)]
+mod tests {
+    use super::*;
+
+    struct FailingReceipt {
+        path: PathBuf,
+    }
+
+    impl ReceiptFinalizer for FailingReceipt {
+        fn path(&self) -> &Path {
+            &self.path
+        }
+
+        fn receipt_id(&self) -> &str {
+            "receipt-id"
+        }
+
+        fn finalize(self, _state: ReceiptState, _result: ReceiptResult) -> AppResult<ReceiptEvent> {
+            Err(AppError::new(
+                ErrorClass::Io,
+                "receipt_write_failed",
+                "the receipt event could not be durably written",
+            ))
+        }
+    }
+
+    fn receipt_result(reason_code: &str) -> ReceiptResult {
+        ReceiptResult {
+            affected_rows: Some(1),
+            reason_code: reason_code.to_owned(),
+            sqlstate: None,
+            database: None,
+            table_schema_sha256: None,
+        }
+    }
+
+    #[test]
+    fn committed_receipt_failure_requires_reconciliation() {
+        let error = finish_committed(
+            FailingReceipt {
+                path: PathBuf::from("receipt.ndjson"),
+            },
+            receipt_result("applied"),
+        )
+        .expect_err("terminal receipt failure after commit must fail");
+
+        assert_eq!(error.class, ErrorClass::Contract);
+        assert_eq!(error.class.exit_code(), 5);
+        assert_eq!(error.code, "committed_receipt_finalization_uncertain");
+        assert!(error.message.contains("database commit succeeded"));
+        assert!(error.message.contains("do not retry"));
+        assert!(error.message.contains("reconcile"));
+    }
+
+    #[test]
+    fn precommit_receipt_failure_remains_an_io_error() {
+        let error = finish(
+            FailingReceipt {
+                path: PathBuf::from("receipt.ndjson"),
+            },
+            ReceiptState::Refused,
+            receipt_result("database_connection_failed"),
+        )
+        .expect_err("receipt failure before commit remains an I/O error");
+
+        assert_eq!(error.class, ErrorClass::Io);
+        assert_eq!(error.class.exit_code(), 1);
+        assert_eq!(error.code, "receipt_write_failed");
+    }
+
+    #[test]
+    fn uncertain_commit_receipt_failure_requires_reconciliation() {
+        let error = finish_uncertain(
+            FailingReceipt {
+                path: PathBuf::from("receipt.ndjson"),
+            },
+            receipt_result("commit_outcome_uncertain"),
+        )
+        .expect_err("receipt failure after an uncertain commit must fail");
+
+        assert_eq!(error.class, ErrorClass::Contract);
+        assert_eq!(error.class.exit_code(), 5);
+        assert_eq!(error.code, "commit_receipt_finalization_uncertain");
+        assert!(error.message.contains("database commit outcome"));
+        assert!(error.message.contains("do not retry"));
+        assert!(error.message.contains("reconcile"));
+    }
 }

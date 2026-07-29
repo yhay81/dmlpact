@@ -25,6 +25,10 @@ fn capabilities_and_contract_are_machine_readable() {
     let capabilities = json_stdout(&["capabilities"]);
     assert_eq!(capabilities["schema_version"], "dmlpact.capabilities.v1");
     assert_eq!(capabilities["safety_defaults"]["tls"], "required");
+    assert_eq!(
+        capabilities["safety_defaults"]["receipt_finalization_failure"],
+        "exit_5_reconciliation_required"
+    );
 
     let contract = json_stdout(&["contract"]);
     assert_eq!(contract["schema_version"], "dmlpact.contract.v1");
