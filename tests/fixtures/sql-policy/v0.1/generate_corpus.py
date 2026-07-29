@@ -353,7 +353,7 @@ def build_metrics(corpus: dict[str, Any]) -> dict[str, Any]:
     by_category = Counter(case["category"] for case in cases)
     return {
         "schema_version": METRICS_SCHEMA,
-        "corpus_sha256": hashlib.sha256(encode(corpus)).hexdigest(),
+        "corpus_sha256": hashlib.sha256(canonical_encode(corpus)).hexdigest(),
         "total_cases": len(cases),
         "exact_matches": len(cases),
         "classification_accuracy": 1.0,
@@ -379,6 +379,15 @@ def build_metrics(corpus: dict[str, Any]) -> dict[str, Any]:
 def encode(value: dict[str, Any]) -> bytes:
     return (
         json.dumps(value, indent=2, sort_keys=True, ensure_ascii=False) + "\n"
+    ).encode()
+
+
+def canonical_encode(value: dict[str, Any]) -> bytes:
+    return json.dumps(
+        value,
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=False,
     ).encode()
 
 

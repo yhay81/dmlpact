@@ -12,9 +12,10 @@ The expected decision, statement kind, requested table, inserted-row count, or
 stable refusal code is labeled from DMLPact's documented safety contract. The
 generator does not invoke DMLPact or derive labels from parser output.
 
-`tests/sql_policy_corpus.rs` verifies the corpus digest and independently
-scores every case through the same in-memory analyzer used before planning or
-applying a mutation. It requires exact agreement with the pinned metrics:
+`tests/sql_policy_corpus.rs` verifies the parsed JSON's canonical digest
+(independent of checkout line endings) and independently scores every case
+through the same in-memory analyzer used before planning or applying a
+mutation. It requires exact agreement with the pinned metrics:
 
 - 400/400 declared-supported statements accepted;
 - 600/600 unsupported or ambiguous statements rejected;

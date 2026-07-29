@@ -74,7 +74,19 @@ fn ratio(numerator: usize, denominator: usize) -> f64 {
 fn published_sql_policy_metrics_are_reproducible() {
     let root = fixture_root();
     let corpus_bytes = fs::read(root.join("corpus.json")).expect("read corpus");
-    let corpus: Corpus = serde_json::from_slice(&corpus_bytes).expect("corpus shape");
+    let corpus_value: Value = serde_json::from_slice(&corpus_bytes).expect("corpus JSON");
+    let canonical_corpus =
+        serde_json::to_vec(&corpus_value).expect("canonical corpus serialization");
+    let corpus_text = String::from_utf8(corpus_bytes).expect("corpus is UTF-8");
+    let lf_text = corpus_text.replace("\r\n", "\n");
+    let crlf_text = lf_text.replace('\n', "\r\n");
+    let crlf_value: Value = serde_json::from_str(&crlf_text).expect("CRLF corpus JSON");
+    assert_eq!(
+        serde_json::to_vec(&crlf_value).expect("canonical CRLF corpus"),
+        canonical_corpus,
+        "logical corpus digest must not depend on checkout line endings"
+    );
+    let corpus: Corpus = serde_json::from_value(corpus_value).expect("corpus shape");
     assert_eq!(corpus.schema_version, "dmlpact.sql-policy-corpus/v0.1");
     assert_eq!(corpus.license, "MIT");
     assert!(!corpus.labeling_methodology.is_empty());
@@ -196,7 +208,7 @@ fn published_sql_policy_metrics_are_reproducible() {
         .collect::<serde_json::Map<_, _>>();
     let actual_metrics = json!({
         "schema_version": "dmlpact.sql-policy-metrics/v0.1",
-        "corpus_sha256": sha256_bytes(&corpus_bytes),
+        "corpus_sha256": sha256_bytes(&canonical_corpus),
         "total_cases": corpus.cases.len(),
         "exact_matches": exact_matches,
         "classification_accuracy": ratio(exact_matches, corpus.cases.len()),
