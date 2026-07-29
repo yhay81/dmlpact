@@ -41,6 +41,9 @@ an SBOM:
 gh release download v0.3.0 --repo yhay81/dmlpact
 ```
 
+See [INSTALL.md](INSTALL.md) for platform-specific asset selection,
+checksum- and provenance-verified installation, updating, and removal.
+
 To build from source with the declared Rust 1.85 MSRV:
 
 ```bash
