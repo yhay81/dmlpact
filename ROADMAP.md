@@ -22,6 +22,8 @@
 - [ ] Add optional audit-log correlation.
 - [ ] Evaluate parameter binding without weakening exact proposal identity.
 - [ ] Expand PostgreSQL version and proxy compatibility fixtures.
+- [x] Publish a deterministic 1,000-case SQL policy corpus with exact
+  supported acceptance, unsupported rejection, and classification metrics.
 
 Current compatibility evidence: v0.2 and v0.3 provide two released
 compatibility cycles. The current v0.3 reader accepts digest-pinned v0.1, v0.2,
@@ -74,6 +76,16 @@ fail-closed analysis, exact effect boundaries, or real operator use.
   artifacts, receipt publication, and diagnostic disclosure; all critical and
   high findings are resolved.
 - No known critical or high-severity vulnerability is open at release time.
+
+Current SQL-policy evidence: the MIT-licensed
+`dmlpact.sql-policy-corpus/v0.1` contains 1,000 deterministic, hand-labeled
+statements across ten equal-size families. The current analyzer accepts all
+400 declared-supported INSERT, UPDATE, DELETE, quoting, and comment cases,
+rejects all 600 CTE, subquery, dynamic-expression, multi-statement,
+unsupported-form, and ambiguous cases, and matches the expected statement
+kind, target table, inserted-row count, or stable refusal code for every case.
+The generator does not invoke DMLPact, and CI recomputes the metrics on every
+supported operating system.
 
 ### Performance and bounds
 
