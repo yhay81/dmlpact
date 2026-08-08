@@ -1,8 +1,9 @@
 # DMLPact artifact compatibility corpus
 
-This corpus freezes sealed plans and hash-linked receipts from the published
-v0.1 machine contract. Current and future offline readers must accept every
-versioned artifact and fail closed on the mutations declared by its manifest.
+This corpus freezes sealed plans and hash-linked receipts from every published
+DMLPact release. Current and future offline readers must accept every
+digest-pinned versioned artifact. The v0.1 corpus also carries the adversarial
+mutation suite shared by the unchanged v1 plan and receipt schemas.
 
 All database identities and hashes are synthetic. No credentials, production
 data, or third-party content are present.
