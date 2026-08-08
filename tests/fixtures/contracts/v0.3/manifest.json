@@ -1,0 +1,17 @@
+{
+  "schema_version": "dmlpact.artifact-corpus/v1",
+  "release_version": "0.3.0",
+  "license": "MIT",
+  "accepted": [
+    {
+      "kind": "plan",
+      "path": "delete.plan.json",
+      "sha256": "25c5573235942b482678170a4fbb019ddf9930f4e1f1757bb96e41d4e608b94a"
+    },
+    {
+      "kind": "receipt",
+      "path": "delete.receipt.ndjson",
+      "sha256": "1a0f5f8dba64f63337b4d57c3ae37e3041271bcbb264bab3cfecb101f7c079f5"
+    }
+  ]
+}

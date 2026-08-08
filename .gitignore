@@ -4,3 +4,5 @@
 .DS_Store
 *.receipt.ndjson
 *.plan.json
+!tests/fixtures/contracts/**/*.receipt.ndjson
+!tests/fixtures/contracts/**/*.plan.json

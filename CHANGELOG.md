@@ -20,6 +20,8 @@ behavior while preserving documented contracts where practical.
 
 ### Fixed
 
+- Restored v0.2 sealed plan and receipt compatibility in the v0.3 reader and
+  added digest-pinned golden artifacts for every published release.
 - Rejected performance evidence with a non-canonical commit identity,
   incomplete runner metadata, a non-raw sample marker, or reused sample paths.
 - Reported terminal receipt durability failure after a database commit attempt
