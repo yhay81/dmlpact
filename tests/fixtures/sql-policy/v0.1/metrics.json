@@ -1,0 +1,61 @@
+{
+  "by_category": {
+    "ambiguous_invalid_rejected": {
+      "cases": 100,
+      "exact_matches": 100
+    },
+    "cte_rejected": {
+      "cases": 100,
+      "exact_matches": 100
+    },
+    "delete_supported": {
+      "cases": 100,
+      "exact_matches": 100
+    },
+    "expression_rejected": {
+      "cases": 100,
+      "exact_matches": 100
+    },
+    "insert_supported": {
+      "cases": 100,
+      "exact_matches": 100
+    },
+    "multi_statement_rejected": {
+      "cases": 100,
+      "exact_matches": 100
+    },
+    "quoting_comments_supported": {
+      "cases": 100,
+      "exact_matches": 100
+    },
+    "subquery_rejected": {
+      "cases": 100,
+      "exact_matches": 100
+    },
+    "unsupported_form_rejected": {
+      "cases": 100,
+      "exact_matches": 100
+    },
+    "update_supported": {
+      "cases": 100,
+      "exact_matches": 100
+    }
+  },
+  "classification_accuracy": 1.0,
+  "corpus_sha256": "62247441941bd1e09536b8eca3a13648bc4d790837a9e05d50b976bf50d5e9ce",
+  "exact_matches": 1000,
+  "schema_version": "dmlpact.sql-policy-metrics/v0.1",
+  "supported": {
+    "acceptance_rate": 1.0,
+    "accepted": 400,
+    "expected": 400,
+    "false_rejections": 0
+  },
+  "total_cases": 1000,
+  "unsupported_or_ambiguous": {
+    "expected": 600,
+    "false_acceptances": 0,
+    "rejected": 600,
+    "rejection_rate": 1.0
+  }
+}
