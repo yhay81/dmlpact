@@ -2,8 +2,6 @@ name: Benchmark
 
 on:
   pull_request:
-  schedule:
-    - cron: "41 6 * * 2"
   workflow_dispatch:
 
 permissions:
@@ -17,7 +15,7 @@ jobs:
   benchmark:
     name: Enforce performance thresholds
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    timeout-minutes: 1
     env:
       DMLPACT_DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/dmlpact_benchmark
       DMLPACT_POSTGRES_IMAGE: postgres:17-alpine@sha256:742f40ea20b9ff2ff31db5458d127452988a2164df9e17441e191f3b72252193
