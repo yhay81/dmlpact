@@ -26,6 +26,9 @@ dmlpact schema capabilities
 Schema identifiers use `dmlpact.<document>.v1`. Additive fields within a schema
 version are avoided in sealed plan and receipt input documents because unknown
 fields are denied. A breaking contract requires a new schema identifier.
+The current reader accepts the digest-pinned v1 artifacts produced by every
+published DMLPact release. Each future release must add its own golden corpus;
+the compatibility test fails if the current tool version is not represented.
 
 The versioned fixtures and self-consistent adversarial mutations in
 [`tests/fixtures/contracts/`](../tests/fixtures/contracts/README.md) pin plan
